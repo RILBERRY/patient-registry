@@ -3,7 +3,7 @@
     <!-- <div class="SubHeading"> -->
       <h2>Islands Details</h2>
       <div class="BtnCont">
-          <a class="AddBtn"> + ADD NEW ISLAND</a>
+          <Router-link class="AddBtn" to="/islands/new">+ Add New Patient</Router-link>
       </div>
     <!-- </div> -->
     <div class="DetailCont">
@@ -16,11 +16,11 @@
                 <div class="w-2">ACTION</div>
             </div>
             <div class="DataCont">
-                <div class="row DataRow">
-                    <div class="w-1 ">ID</div>
-                    <div class="w-3">Isdhoo</div>
-                    <div class="w-3">Laamu</div>
-                    <div class="w-3">Maldives</div>
+                <div class="row DataRow" v-for="_IslandInfo in IslandInfo" :key="_IslandInfo.id" >
+                    <div class="w-1 ">{{_IslandInfo.id}}</div>
+                    <div class="w-3">{{_IslandInfo.islandName}}</div>
+                    <div class="w-3">{{_IslandInfo.atoll}}</div>
+                    <div class="w-3">{{_IslandInfo.country}}</div>
                     <div class="w-2 ActionCont">
                         <button class="SmallBtn edit">Edit</button>
                         <button class="SmallBtn delete">Delete</button>
@@ -34,7 +34,20 @@
 
 
 <script>
+
 export default {
+
+data(){
+    return {
+        IslandInfo: []
+    }
+},
+mounted(){
+    fetch('http://127.0.0.1:8000/api/island')
+        .then(res => res.json())
+        .then(data => this.IslandInfo = data)
+        .catch(err => console.log(err.message))
+}
 
 }
 </script>

@@ -8,7 +8,7 @@
       </div>
     <!-- </div> -->
     <div class="DetailCont">
-        <div class="TableCont">
+        <form class="TableCont">
             <div class="row TableHeading">
                 <div class="w-1 ">ID</div>
                 <div class="w-3">HOUSE NAME</div>
@@ -18,19 +18,19 @@
                 <div class="w-2">ACTION</div>
             </div>
             <div class="DataCont">
-                <div class="row DataRow">
-                    <div class="w-1 ">ID</div>
-                    <div class="w-3">Dhonabshige</div>
-                    <div class="w-3">5TH floor</div>
-                    <div class="w-3">Bodu magu</div>
-                    <div class="w-3">20321</div>
+                <div class="row DataRow" v-for="_AddressesInfo in AddressesInfo" :key="_AddressesInfo.id">
+                    <div class="w-1 ">{{_AddressesInfo.id}}</div>
+                    <div class="w-3">{{_AddressesInfo.houseName}}</div>
+                    <div class="w-3">{{_AddressesInfo.floor}}</div>
+                    <div class="w-3">{{_AddressesInfo.street}}</div>
+                    <div class="w-3">{{_AddressesInfo.postCode}}</div>
                     <div class="w-2 ActionCont">
                         <button class="SmallBtn edit">Edit</button>
                         <button class="SmallBtn delete">Delete</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
   </div>
 </template>
@@ -38,7 +38,17 @@
 
 <script>
 export default {
-
+data(){
+    return {
+        AddressesInfo: []
+    }
+},
+mounted(){
+    fetch('http://127.0.0.1:8000/api/address')
+        .then(res => res.json())
+        .then(data => this.AddressesInfo = data)
+        .catch(err => console.log(err.message))
+}
 }
 </script>
 

@@ -17,12 +17,12 @@
                 <div class="w-2">ACTION</div>
             </div>
             <div class="DataCont">
-                <div class="row DataRow">
-                    <div class="w-1 ">1</div>
-                    <div class="w-3">Ali Rilwan</div>
-                    <div class="w-2">05-05-1998</div>
-                    <div class="w-3">A309636</div>
-                    <div class="w-4">4TH FLOOR, THAFAATH , ABADHAH FAHI , K.MALE , MALDIVES</div>
+                <div class="row DataRow" v-for="_PatientInfo in PatientInfo" :key="_PatientInfo.id">
+                    <div class="w-1 ">{{_PatientInfo.id}}</div>
+                    <div class="w-3">{{_PatientInfo.fullName}}</div>
+                    <div class="w-2">{{_PatientInfo.DOB}}</div>
+                    <div class="w-3">{{_PatientInfo.nationalID}}</div>
+                    <div class="w-4">{{_PatientInfo.floor +", "+ _PatientInfo.houseName +", "+ _PatientInfo.street +", "+ _PatientInfo.postCode +", "+ _PatientInfo.atoll +", "+ _PatientInfo.islandName +", "+ _PatientInfo.country}}</div>
                     <div class="w-2 ActionCont">
                         <button class="SmallBtn edit">Edit</button>
                         <button class="SmallBtn delete">Delete</button>
@@ -37,6 +37,18 @@
 
 <script>
 export default {
+
+data(){
+    return {
+        PatientInfo: []
+    }
+},
+mounted(){
+    fetch('http://127.0.0.1:8000/api/patient')
+        .then(res => res.json())
+        .then(data => this.PatientInfo = data)
+        .catch(err => console.log(err.message))
+}
 
 }
 </script>

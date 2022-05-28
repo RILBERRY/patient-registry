@@ -4,71 +4,163 @@
           <h2>Add New Patients Details</h2>
     <!-- </div> -->
     <div class="DetailCont">
-        <div class="FormCont">
+        <form class="FormCont" @submit.prevent="handelSubmit" >
+            <div class="err" v-if="isErr">
+                <p v-if="patientNameInpErr">{{patientNameInpErr}}</p>
+                <p v-if="BoDInpErr">{{BoDInpErr}}</p>
+                <p v-if="nationalIDInpErr">{{nationalIDInpErr}}</p>
+                <p v-if="floorInpErr">{{floorInpErr}}</p>
+                <p v-if="houseNameInpErr">{{houseNameInpErr}}</p>
+                <p v-if="postCodeInpErr">{{postCodeInpErr}}</p>
+                <p v-if="streetInpErr">{{streetInpErr}}</p>
+                <p v-if="AtollInpErr">{{AtollInpErr}}</p>
+                <p v-if="IslandInpErr">{{IslandInpErr}}</p>
+                <p v-if="CountryInpErr">{{CountryInpErr}}</p>
+            </div>
            <h4 class="GroupHeading">Patient</h4>
            <div class="InputCont">
                <label>Patinet Name</label>
-               <input type="text" placeholder="Full Name">
+               <input type="text" placeholder="Full Name" v-model="patientName">
            </div>
            <div class="InputCont">
                <label>Date of Birth</label>
-               <input type="date" >
+               <input type="date" v-model="DOB" >
            </div>
            <div class="InputCont">
                <label>National ID</label>
-               <input type="text"  placeholder="AXXXXXX" >
+               <input type="text"  placeholder="AXXXXXX" v-model="nationalID" >
            </div>
            <h4 class="GroupHeading">Address</h4>
            <div class="GroupCont">
                 <div class="InputCont SubA">
                     <label>Floor/Aprt. No</label>
-                    <input type="text" placeholder="3st floor B or 3B">
+                    <input type="text" placeholder="3st floor B or 3B" v-model="floor">
                  </div>
                 <div class="InputCont SubB">
                     <label>House Name</label>
-                    <input type="text"  placeholder="Eg:M.dhonfaruge">
+                    <input type="text"  placeholder="Eg:M.dhonfaruge" v-model="houseName">
                 </div>
             </div>
            <div class="GroupCont">
                 <div class="InputCont SubA">
                     <label>PostCode</label>
-                    <input type="text"  placeholder="Eg:20121">
+                    <input type="text"  placeholder="Eg:20121" v-model="postCode">
                  </div>
                 <div class="InputCont SubB">
                     <label>Street</label>
-                    <input type="text"  placeholder="Street">
+                    <input type="text"  placeholder="Street" v-model="street">
                 </div>
             </div>
             <h4 class="GroupHeading">Island</h4>
            <div class="GroupCont">
                 <div class="InputCont SubA">
                     <label>Atoll</label>
-                    <input type="text"  placeholder="Atoll">
+                    <input type="text"  placeholder="Atoll" v-model="atoll">
                  </div>
                 <div class="InputCont SubB">
                     <label>Island Name</label>
-                    <input type="text"  placeholder="Island Name">
+                    <input type="text"  placeholder="Island Name" v-model="islandName">
                 </div>
             </div>
            <div class="GroupCont">
                <div class="InputCont SubFull">
                     <label>Country</label>
-                    <input type="text"  placeholder="Country">
+                    <input type="text"  placeholder="Country" v-model="country">
                 </div>
             </div>
             <div class="GroupCont justCenter">
                 <button class="Btn greenBtn">Save</button>
-                <button class="Btn redBtn">Clear form</button>
+                <div class="Btn redBtn" @click="resetForm">Clear form</div>
             </div>
-       </div>
+       </form>
     </div>
   </div>
 </template>
 
 
 <script>
+import axios from 'axios'
 export default {
+    data () {
+        return {
+            patientName: '',
+            DOB: '',
+            nationalID: '',
+            patientNameInpErr: '',
+            BoDInpErr: '',
+            nationalIDInpErr: '',
 
+            floor: '',
+            houseName: '',
+            postCode: '',
+            street: '',
+            floorInpErr: '',
+            houseNameInpErr: '',
+            postCodeInpErr: '',
+            streetInpErr: '',
+
+            atoll: '',
+            islandName: '',
+            country: 'Maldives',
+            AtollInpErr: '',
+            IslandInpErr: '',
+            CountryInpErr: '',
+
+            isErr: false,
+        }
+    },
+    
+    methods: {
+        handelSubmit(){
+            this.patientNameInpErr = this.patientName == '' ? "- Patient Name Field is required" : ''
+            this.DOBInpErr = this.DOB == '' ? "- Date of birth Field is required" : ''
+            this.nationalIDInpErr = this.nationalID == '' ? "- National id Field is required" : ''
+            this.floorInpErr = this.floor == '' ? "- Floor Field is required" : ''
+            this.houseNameInpErr = this.houseName == '' ? "- House Name Field is required" : ''
+            this.postCodeInpErr = this.postCode == '' ? "- Post code Field is required" : ''
+            this.streetInpErr = this.street == '' ? "- Street Field is required" : ''
+            this.AtollInpErr = this.atoll == '' ? " - Atoll Field is required" : ''
+            this.IslandInpErr = this.islandName == '' ? "- Island Field is required" : ''
+            this.CountryInpErr = this.country == '' ? "- Country Field is required" : ''
+
+            if(this.patientNameInpErr || this.DOBInpErr || this.nationalIDInpErr 
+            || this.floorInpErr || this.houseNameInpErr || this.postCodeInpErr || this.streetInpErr
+            || this.AtollInpErr || this.IslandInpErr || this.CountryInpErr){
+                this.isErr = true
+            }else{
+                this.isErr = false
+                this.newQuery = {
+                    fullName: this.patientName,
+                    DOB: this.DOB,
+                    nationalID:this.nationalID,
+                    floor: this.floor,
+                    houseName: this.houseName,
+                    postCode: this.postCode,
+                    street:  this.street,
+                    atoll: this.atoll,
+                    islandName: this.islandName,
+                    country: this.country
+                }
+                console.log(this.newQuery);
+                axios.post("http://127.0.0.1:8000/api/patient",this.newQuery)
+                .then((result)=>{
+                    console.log(result)
+                })
+            }
+        },
+        resetForm(){
+            this.patientName = '',
+            this.DOB = '',
+            this.nationalID = '',
+            this.floor = '',
+            this.houseName = '',
+            this.postCode = '',
+            this.street = ''
+            this.atoll = '',
+            this.islandName = '',
+            this.country = 'Maldives'
+        }
+    }
 }
 </script>
 

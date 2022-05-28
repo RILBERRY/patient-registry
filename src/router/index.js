@@ -4,13 +4,13 @@ import PatientNew from '../views/Patient/Patients-NewForm.vue'
 import AddressView from '../views/Address/Addresses-index.vue'
 import AddressNew from '../views/Address/Addresses-NewForm.vue'
 import IslandView from '../views/Island/Islands-index.vue'
+import IslandNew from '../views/Island/Islands-NewForm.vue'
 
 
 const routes = [
   {
     path: '/',
-    name: 'PatientView',
-    component: PatientView
+    redirect: '/patients',
   },
   {
     path: '/patients',
@@ -36,6 +36,11 @@ const routes = [
     path: '/islands',
     name: 'IslandView',
     component: IslandView
+  },
+  {
+    path: '/islands/new',
+    name: 'IslandNew',
+    component: IslandNew
   },
 ]
 

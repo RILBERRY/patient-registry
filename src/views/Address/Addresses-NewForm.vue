@@ -4,33 +4,39 @@
           <h2>Add New Address Details</h2>
     <!-- </div> -->
     <div class="DetailCont">
-        <div class="FormCont">
+        <form class="FormCont" @submit.prevent="handelSubmit">
+            <div class="err" v-if="floorInpErr || houseNameInpErr || postCodeInpErr || streetInpErr">
+                <p v-if="floorInpErr">{{floorInpErr}}</p>
+                <p v-if="houseNameInpErr">{{houseNameInpErr}}</p>
+                <p v-if="postCodeInpErr">{{postCodeInpErr}}</p>
+                <p v-if="streetInpErr">{{streetInpErr}}</p>
+            </div>
             <h4 class="GroupHeading">Address</h4>
             <div class="GroupCont">
                 <div class="InputCont SubA">
                     <label>Floor/Aprt. No</label>
-                    <input type="text" placeholder="3st floor B or 3B">
+                    <input type="text" placeholder="3st floor B or 3B" v-model="floor">
                  </div>
                 <div class="InputCont SubB">
                     <label>House Name</label>
-                    <input type="text"  placeholder="Eg:M.dhonfaruge">
+                    <input type="text"  placeholder="Eg:M.dhonfaruge" v-model="houseName">
                 </div>
             </div>
            <div class="GroupCont">
                 <div class="InputCont SubA">
                     <label>PostCode</label>
-                    <input type="text"  placeholder="Eg:20121">
+                    <input type="text"  placeholder="Eg:20121" v-model="postCode">
                  </div>
                 <div class="InputCont SubB">
                     <label>Street</label>
-                    <input type="text"  placeholder="Street">
+                    <input type="text"  placeholder="Street" v-model="street">
                 </div>
             </div>
             <div class="GroupCont justCenter">
-                <button class="Btn greenBtn">Save</button>
-                <button class="Btn redBtn">Clear form</button>
+                <button class="Btn greenBtn" >Save</button>
+                <div class="Btn redBtn"  @click="resetForm">Clear form</div>
             </div>
-       </div>
+       </form>
     </div>
   </div>
 </template>
@@ -38,7 +44,32 @@
 
 <script>
 export default {
-
+    data () {
+        return {
+            floor: '',
+            houseName: '',
+            postCode: '',
+            street: '',
+            floorInpErr: '',
+            houseNameInpErr: '',
+            postCodeInpErr: '',
+            streetInpErr: '',
+        }
+    },
+    methods: {
+       handelSubmit(){
+           this.floorInpErr = this.floor == '' ? " - Floor Field is required" : ''
+           this.houseNameInpErr = this.houseName == '' ? "- House Name Field is required" : ''
+           this.postCodeInpErr = this.postCode == '' ? "- Post code Field is required" : ''
+           this.streetInpErr = this.street == '' ? "- Street Field is required" : ''
+       },
+       resetForm(){
+            this.floor = '',
+            this.houseName = '',
+            this.postCode = '',
+            this.street = ''
+       }
+    }
 }
 </script>
 
