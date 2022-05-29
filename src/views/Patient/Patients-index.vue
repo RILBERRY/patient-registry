@@ -25,7 +25,7 @@
                     <div class="w-4">{{_PatientInfo.floor +", "+ _PatientInfo.houseName +", "+ _PatientInfo.street +", "+ _PatientInfo.postCode +", "+ _PatientInfo.atoll +", "+ _PatientInfo.islandName +", "+ _PatientInfo.country}}</div>
                     <div class="w-2 ActionCont">
                         <button class="SmallBtn edit">Edit</button>
-                        <button class="SmallBtn delete">Delete</button>
+                        <button class="SmallBtn delete" @click="Delete(_PatientInfo.id)">Delete</button>
                     </div>
                 </div>
             </div>
@@ -36,13 +36,21 @@
 
 
 <script>
+import axios from 'axios'
 export default {
-
 data(){
     return {
         PatientInfo: []
     }
 },
+methods: {
+    Delete(id){
+        axios.delete('http://127.0.0.1:8000/api/patient/'+id).then((res)=>{
+        console.log(res)
+        window.location.href='/patients'
+    })
+    }
+},  
 mounted(){
     fetch('http://127.0.0.1:8000/api/patient')
         .then(res => res.json())
@@ -53,7 +61,7 @@ mounted(){
 }
 </script>
 
-<style>
+<style >
 .BodyCont{
     /* position: fixed; */
     width: 90%;

@@ -3,10 +3,13 @@
     <h2>Add New Islands Details</h2>
     <div class="DetailCont">
         <form class="FormCont" @submit.prevent="handelSubmit">
-            <div class="err" v-if="AtollInpErr || IslandInpErr || CountryInpErr">
+            <div class="err" v-if="isErr">
                 <p v-if="AtollInpErr">{{AtollInpErr}}</p>
                 <p v-if="IslandInpErr">{{IslandInpErr}}</p>
                 <p v-if="CountryInpErr">{{CountryInpErr}}</p>
+            </div>
+            <div class="Succ" v-if="msg">
+                <p>{{msg}}</p>
             </div>
             <h4 class="GroupHeading">Island</h4>
            <div class="GroupCont">
@@ -48,32 +51,44 @@ export default {
             AtollInpErr: '',
             IslandInpErr: '',
             CountryInpErr: '',
+            isErr: false,
+            msg: '',
         }
     },
     methods: {
         handelSubmit(){
             this.AtollInpErr = this.atoll == '' ? " - Atoll Field is required" : ''
-            this.IslandInpErr = this.islandName == '' ? "- Island Field is required" : ''
+            this.IslandInpErr = this.islandName == '' ? "- Island name Field is required" : ''
             this.CountryInpErr = this.country == '' ? "- Country Field is required" : ''
-            this.newQuery = {
-                atoll: this.atoll,
-                islandName: this.islandName,
-                country: this.country
+            if(this.AtollInpErr || this.IslandInpErr || this.CountryInpErr){
+                this.isErr = true
+            }else{
+                this.isErr = false
+                this.newQuery = {
+                    atoll: this.atoll,
+                    islandName: this.islandName,
+                    country: this.country
+                }
+                axios.post("http://127.0.0.1:8000/api/island",this.newQuery).then((res)=>{
+                    this.msg = res.data.msg
+                    this.resetForm()
+                    this.activate()
+                })
             }
-            console.log(this.newQuery);
-           
-       
         },
         resetForm(){
             this.atoll = '',
             this.islandName = '',
             this.country = 'Maldives'
+        },
+        activate() {
+            setTimeout(() => this.msg = '', 2000);
         }
     }
 }
 </script>
 
-<style>
+<style >
 .BodyCont{
     /* position: fixed; */
     width: 90%;

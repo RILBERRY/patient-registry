@@ -17,6 +17,9 @@
                 <p v-if="IslandInpErr">{{IslandInpErr}}</p>
                 <p v-if="CountryInpErr">{{CountryInpErr}}</p>
             </div>
+            <div class="Succ" v-if="msg">
+                <p>{{msg}}</p>
+            </div>
            <h4 class="GroupHeading">Patient</h4>
            <div class="InputCont">
                <label>Patinet Name</label>
@@ -107,9 +110,9 @@ export default {
             CountryInpErr: '',
 
             isErr: false,
+            msg: ''
         }
     },
-    
     methods: {
         handelSubmit(){
             this.patientNameInpErr = this.patientName == '' ? "- Patient Name Field is required" : ''
@@ -142,9 +145,10 @@ export default {
                     country: this.country
                 }
                 console.log(this.newQuery);
-                axios.post("http://127.0.0.1:8000/api/patient",this.newQuery)
-                .then((result)=>{
-                    console.log(result)
+                axios.post("http://127.0.0.1:8000/api/patient",this.newQuery).then((res)=>{
+                    this.msg = res.data.msg
+                    this.resetForm()
+                    this.activate()
                 })
             }
         },
@@ -159,12 +163,15 @@ export default {
             this.atoll = '',
             this.islandName = '',
             this.country = 'Maldives'
+        },
+        activate() {
+            setTimeout(() => this.msg = '', 2000);
         }
     }
 }
 </script>
 
-<style>
+<style >
 .BodyCont{
     /* position: fixed; */
     width: 90%;

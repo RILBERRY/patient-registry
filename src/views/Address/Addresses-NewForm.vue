@@ -5,11 +5,14 @@
     <!-- </div> -->
     <div class="DetailCont">
         <form class="FormCont" @submit.prevent="handelSubmit">
-            <div class="err" v-if="floorInpErr || houseNameInpErr || postCodeInpErr || streetInpErr">
+            <div class="err" v-if="isErr">
                 <p v-if="floorInpErr">{{floorInpErr}}</p>
                 <p v-if="houseNameInpErr">{{houseNameInpErr}}</p>
                 <p v-if="postCodeInpErr">{{postCodeInpErr}}</p>
                 <p v-if="streetInpErr">{{streetInpErr}}</p>
+            </div>
+            <div class="Succ" v-if="msg">
+                <p>{{msg}}</p>
             </div>
             <h4 class="GroupHeading">Address</h4>
             <div class="GroupCont">
@@ -43,6 +46,7 @@
 
 
 <script>
+import axios from 'axios'
 export default {
     data () {
         return {
@@ -54,26 +58,47 @@ export default {
             houseNameInpErr: '',
             postCodeInpErr: '',
             streetInpErr: '',
+            isErr: false,
+            msg: '',
         }
     },
     methods: {
-       handelSubmit(){
-           this.floorInpErr = this.floor == '' ? " - Floor Field is required" : ''
-           this.houseNameInpErr = this.houseName == '' ? "- House Name Field is required" : ''
-           this.postCodeInpErr = this.postCode == '' ? "- Post code Field is required" : ''
-           this.streetInpErr = this.street == '' ? "- Street Field is required" : ''
-       },
-       resetForm(){
-            this.floor = '',
-            this.houseName = '',
-            this.postCode = '',
-            this.street = ''
-       }
+        handelSubmit(){
+            this.floorInpErr = this.floor == '' ? " - Floor Field is required" : ''
+            this.houseNameInpErr = this.houseName == '' ? "- House Name Field is required" : ''
+            this.postCodeInpErr = this.postCode == '' ? "- Post code Field is required" : ''
+            this.streetInpErr = this.street == '' ? "- Street Field is required" : ''
+            if(this.floorInpErr || this.houseNameInpErr || this.postCodeInpErr || this.streetInpErr){
+                this.isErr = true
+            }else{
+                this.isErr = false
+                this.newQuery = {
+                    floor: this.floor,
+                    houseName: this.houseName,
+                    street: this.street,
+                    postCode: this.postCode
+                }
+                axios.post("http://127.0.0.1:8000/api/address",this.newQuery).then((res)=>{
+                   this.msg = res.data.msg
+                   this.resetForm()
+                   this.activate()
+                })
+            }
+        },
+        resetForm(){
+                this.floor = '',
+                this.houseName = '',
+                this.postCode = '',
+                this.street = ''
+        },
+        activate() {
+            setTimeout(() => this.msg = '', 2000);
+        }
     }
 }
 </script>
 
-<style>
+<style >
 .BodyCont{
     /* position: fixed; */
     width: 90%;
@@ -155,5 +180,13 @@ export default {
     border-radius: 5px;
     color: #fff;
 }
-
+.Succ{
+    width: 200px;
+    margin:auto;
+    padding: 10px;
+    background-color:rgb(21, 158, 21);
+    border-radius: 10px;
+    color: #fff;
+    font-weight: bold;
+}
 </style>

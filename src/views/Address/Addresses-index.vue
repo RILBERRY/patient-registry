@@ -52,7 +52,7 @@ mounted(){
 }
 </script>
 
-<style>
+<style >
 .BodyCont{
     /* position: fixed; */
     width: 90%;

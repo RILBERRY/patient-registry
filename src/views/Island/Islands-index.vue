@@ -36,7 +36,6 @@
 <script>
 
 export default {
-
 data(){
     return {
         IslandInfo: []
@@ -48,11 +47,10 @@ mounted(){
         .then(data => this.IslandInfo = data)
         .catch(err => console.log(err.message))
 }
-
 }
 </script>
 
-<style>
+<style >
 .BodyCont{
     /* position: fixed; */
     width: 90%;
