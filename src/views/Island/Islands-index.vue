@@ -16,6 +16,9 @@
                 <div class="w-2">ACTION</div>
             </div>
             <div class="DataCont">
+                <div class="err-str" v-if="ServerErr">
+                    <p v-if="ServerErr">{{ServerErr}}</p>
+                </div>
                 <div class="row DataRow" v-for="_IslandInfo in IslandInfo" :key="_IslandInfo.id" >
                     <div class="w-1 ">{{_IslandInfo.id}}</div>
                     <div class="w-3">{{_IslandInfo.islandName}}</div>
@@ -38,14 +41,15 @@
 export default {
 data(){
     return {
-        IslandInfo: []
+        IslandInfo: [],
+        ServerErr: ''
     }
 },
 mounted(){
     fetch('http://127.0.0.1:8000/api/island')
         .then(res => res.json())
         .then(data => this.IslandInfo = data)
-        .catch(err => console.log(err.message))
+        .catch(err => this.ServerErr = "Database Connection Faild! ")
 }
 }
 </script>

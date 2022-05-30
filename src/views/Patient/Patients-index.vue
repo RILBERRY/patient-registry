@@ -17,6 +17,9 @@
                 <div class="w-2">ACTION</div>
             </div>
             <div class="DataCont">
+                <div class="err-str" v-if="ServerErr">
+                    <p v-if="ServerErr">{{ServerErr}}</p>
+                </div>
                 <div class="row DataRow" v-for="_PatientInfo in PatientInfo" :key="_PatientInfo.id">
                     <div class="w-1 ">{{_PatientInfo.id}}</div>
                     <div class="w-3">{{_PatientInfo.fullName}}</div>
@@ -40,22 +43,23 @@ import axios from 'axios'
 export default {
 data(){
     return {
-        PatientInfo: []
+        PatientInfo: [],
+        ServerErr: '',
     }
 },
 methods: {
     Delete(id){
         axios.delete('http://127.0.0.1:8000/api/patient/'+id).then((res)=>{
-        console.log(res)
-        window.location.href='/patients'
-    })
+            console.log(res)
+            window.location.href='/patients'
+        })
     }
 },  
 mounted(){
     fetch('http://127.0.0.1:8000/api/patient')
         .then(res => res.json())
         .then(data => this.PatientInfo = data)
-        .catch(err => console.log(err.message))
+        .catch(err => this.ServerErr = "Database Connection Faild! ")
 }
 
 }
@@ -163,6 +167,13 @@ mounted(){
     background-color: rgb(11, 109, 254);
     color: #fff;
 } */
-
+.err-str{
+    width:300px;
+    margin:auto;
+    padding:10px;
+    border-radius: 10px;
+    color:rgb(212, 68, 68);
+    font-weight: bold;
+}
 
 </style>

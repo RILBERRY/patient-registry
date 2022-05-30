@@ -9,6 +9,9 @@
     <!-- </div> -->
     <div class="DetailCont">
         <form class="TableCont">
+             <div class="err" v-if="ActionStatus">
+                    <p v-if="ActionStatus">{{ActionStatus}}</p>
+                </div>
             <div class="row TableHeading">
                 <div class="w-1 ">ID</div>
                 <div class="w-3">HOUSE NAME</div>
@@ -18,6 +21,9 @@
                 <div class="w-2">ACTION</div>
             </div>
             <div class="DataCont">
+                 <div class="err-str" v-if="ServerErr">
+                    <p v-if="ServerErr">{{ServerErr}}</p>
+                </div>
                 <div class="row DataRow" v-for="_AddressesInfo in AddressesInfo" :key="_AddressesInfo.id">
                     <div class="w-1 ">{{_AddressesInfo.id}}</div>
                     <div class="w-3">{{_AddressesInfo.houseName}}</div>
@@ -26,7 +32,7 @@
                     <div class="w-3">{{_AddressesInfo.postCode}}</div>
                     <div class="w-2 ActionCont">
                         <button class="SmallBtn edit">Edit</button>
-                        <button class="SmallBtn delete">Delete</button>
+                        <div class="SmallBtn delete" @click="Delete(_AddressesInfo.id)">Delete</div>
                     </div>
                 </div>
             </div>
@@ -37,17 +43,35 @@
 
 
 <script>
+import axios from 'axios'
 export default {
 data(){
     return {
-        AddressesInfo: []
+        AddressesInfo: [],
+        ActionStatus:'',
+        ServerErr:'',
     }
+},
+methods: {
+    Delete(id){
+        axios.delete('http://127.0.0.1:8000/api/address/'+id).then((res)=>{
+            window.location.href='/address'
+            this.ActionStatus = "Address Deleted"
+            this.activate()
+        }).catch((e) => {
+            this.activate()
+            this.ActionStatus = "Cant Delete This Address! Patient Exists with this address"
+      })
+    },
+    activate() {
+        setTimeout(() => this.ActionStatus = '', 2000);
+    },
 },
 mounted(){
     fetch('http://127.0.0.1:8000/api/address')
         .then(res => res.json())
         .then(data => this.AddressesInfo = data)
-        .catch(err => console.log(err.message))
+        .catch(err => this.ServerErr = "Database Connection Faild! ")
 }
 }
 </script>
