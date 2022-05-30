@@ -4,7 +4,7 @@
           <h2>Add New Address Details</h2>
     <!-- </div> -->
     <div class="DetailCont">
-        <form class="FormCont" @submit.prevent="handelSubmit">
+        <form class="FormCont" @submit.prevent="handelSubmit(address.id)">
             <div class="err" v-if="isErr">
                 <p v-if="floorInpErr">{{floorInpErr}}</p>
                 <p v-if="houseNameInpErr">{{houseNameInpErr}}</p>
@@ -14,10 +14,10 @@
             <div class="Succ" v-if="msg">
                 <p>{{msg}}</p>
             </div>
-            <h4 class="GroupHeading">Address</h4>
+            <h4 class="GroupHeading">Address </h4>
             <div class="GroupCont">
                 <div class="InputCont SubA">
-                    <label>Floor/Aprt. No</label>
+                    <label>Floor/Aprt. No </label>
                     <input type="text" placeholder="3st floor B or 3B" v-model="floor">
                  </div>
                 <div class="InputCont SubB">
@@ -36,8 +36,8 @@
                 </div>
             </div>
             <div class="GroupCont justCenter">
-                <button class="Btn greenBtn" >Save</button>
-                <div class="Btn redBtn"  @click="resetForm">Clear form</div>
+                <button class="Btn greenBtn" >Update</button>
+                <router-link class="Btn redBtn"  :to="{name:'AddressView'}">Cancel</router-link>
             </div>
        </form>
     </div>
@@ -47,9 +47,11 @@
 
 <script>
 import axios from 'axios'
+import GetAddress from '../../inc/GetAddress'
 
 export default {
-    data () {
+    props:['id'],
+    data (props) {
         return {
             floor: '',
             houseName: '',
@@ -62,9 +64,16 @@ export default {
             isErr: false,
             msg: '',
         }
+        // console.log(address.)
+    },
+    setup(props){
+        const {address, err, load} = GetAddress(props.id)
+        load()
+        return {address, err}
     },
     methods: {
-        handelSubmit(){
+        handelSubmit(id){
+            this.DataBind()           
             this.floorInpErr = this.floor == '' ? " - Floor Field is required" : ''
             this.houseNameInpErr = this.houseName == '' ? "- House Name Field is required" : ''
             this.postCodeInpErr = this.postCode == '' ? "- Post code Field is required" : ''
@@ -79,23 +88,24 @@ export default {
                     street: this.street,
                     postCode: this.postCode
                 }
-                axios.post("http://127.0.0.1:8000/api/address",this.newQuery).then((res)=>{
+                axios.put("http://127.0.0.1:8000/api/address/"+id,this.newQuery).then((res)=>{
                    this.msg = res.data.msg
-                   this.resetForm()
                    this.activate()
                 })
             }
         },
-        resetForm(){
-                this.floor = '',
-                this.houseName = '',
-                this.postCode = '',
-                this.street = ''
+        DataBind(){
+            this.floor = this.floor == '' ? this.address.floor : this.floor
+            this.houseName = this.houseName == '' ? this.address.houseName : this.houseName
+            this.postCode = this.postCode == '' ? this.address.postCode : this.postCode
+            this.street = this.street == '' ? this.address.street : this.street
         },
         activate() {
-            setTimeout(() => this.msg = '', 2000);
+            setTimeout(() =>  window.location.href = "/address", 500)
+            
         }
-    }
+    },
+   
 }
 </script>
 

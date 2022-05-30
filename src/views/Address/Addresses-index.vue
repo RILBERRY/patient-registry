@@ -20,10 +20,10 @@
                 <div class="w-3">POSTCODE</div>
                 <div class="w-2">ACTION</div>
             </div>
-            <div class="DataCont">
-                 <div class="err-str" v-if="ServerErr">
+                <div class="err-str" v-if="ServerErr">
                     <p v-if="ServerErr">{{ServerErr}}</p>
                 </div>
+            <div class="DataCont">
                 <div class="row DataRow" v-for="_AddressesInfo in AddressesInfo" :key="_AddressesInfo.id">
                     <div class="w-1 ">{{_AddressesInfo.id}}</div>
                     <div class="w-3">{{_AddressesInfo.houseName}}</div>
@@ -31,7 +31,7 @@
                     <div class="w-3">{{_AddressesInfo.street}}</div>
                     <div class="w-3">{{_AddressesInfo.postCode}}</div>
                     <div class="w-2 ActionCont">
-                        <button class="SmallBtn edit">Edit</button>
+                        <router-link class="SmallBtn edit" :to="{ name: 'AddressEdit', params:{ id: _AddressesInfo.id }}" >Edit</router-link>
                         <div class="SmallBtn delete" @click="Delete(_AddressesInfo.id)">Delete</div>
                     </div>
                 </div>
@@ -56,15 +56,13 @@ methods: {
     Delete(id){
         axios.delete('http://127.0.0.1:8000/api/address/'+id).then((res)=>{
             window.location.href='/address'
-            this.ActionStatus = "Address Deleted"
-            this.activate()
         }).catch((e) => {
             this.activate()
             this.ActionStatus = "Cant Delete This Address! Patient Exists with this address"
       })
     },
     activate() {
-        setTimeout(() => this.ActionStatus = '', 2000);
+        setTimeout(() => this.ActionStatus = '', 3000);
     },
 },
 mounted(){
@@ -169,6 +167,7 @@ mounted(){
     border-radius: 5px;
     border: 1px solid;
     color: #fff;
+    text-decoration: none;
 }
 .edit{
     background-color: rgb(61, 179, 34);

@@ -67,6 +67,9 @@ nav a{
 nav a:hover{
   background-color:#2c3e50;
 }
+router-link{
+  text-decoration: none;
+}
 @media only screen and (max-width: 400px) {
     .BodyCont{
         width: 100%;

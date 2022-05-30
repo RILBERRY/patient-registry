@@ -27,7 +27,7 @@
                     <div class="w-3">{{_PatientInfo.nationalID}}</div>
                     <div class="w-4">{{_PatientInfo.floor +", "+ _PatientInfo.houseName +", "+ _PatientInfo.street +", "+ _PatientInfo.postCode +", "+ _PatientInfo.atoll +", "+ _PatientInfo.islandName +", "+ _PatientInfo.country}}</div>
                     <div class="w-2 ActionCont">
-                        <button class="SmallBtn edit">Edit</button>
+                        <router-link class="SmallBtn edit" :to="{ name:'PateintEdit', params: {id:_PatientInfo.id}}" >Edit</router-link>
                         <button class="SmallBtn delete" @click="Delete(_PatientInfo.id)">Delete</button>
                     </div>
                 </div>
